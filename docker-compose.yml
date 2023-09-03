@@ -1,0 +1,11 @@
+version: '3'
+services:
+  noticer_py:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8008:8000"
+    volumes:
+      - ./app:/app
+    command: ["watchmedo", "auto-restart", "--directory", "/app", "--pattern", "*.py", "--", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
