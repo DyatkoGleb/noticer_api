@@ -1,3 +1,5 @@
 fastapi
 uvicorn
 watchdog
+sqlalchemy
+mysql-connector-python
