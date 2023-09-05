@@ -13,12 +13,13 @@ services:
       - mysql
 
   mysql:
-    image: mysql:5.7
+    image: mysql:8.1
     container_name: mysql
     environment:
       MYSQL_DATABASE: '${MYSQL_DATABASE}'
       MYSQL_USER: '${MYSQL_USER}'
       MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
       MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+      LANG: C.UTF_8
     ports:
       - "3306:3306"
