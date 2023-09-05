@@ -30,10 +30,13 @@ class Database():
         Base.metadata.create_all(bind=engine)
         self.db = sessionmaker(autocommit=False, autoflush=False, bind=engine)()
 
-    def add_new_item(self, db_item: Notes | Notices) -> Notes | Notices:
+    def add_new_item(self, db_item: Notes | Notices) -> dict:
         self.db.add(db_item)
         self.db.commit()
         self.db.refresh(db_item)
         self.db.close()
 
-        return db_item
+        return self.sqlalchemy_object_to_dict(db_item)
+
+    def sqlalchemy_object_to_dict(self, object: Notes | Notices) -> dict:
+        return {column.name: getattr(object, column.name) for column in object.__table__.columns}
