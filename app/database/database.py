@@ -1,19 +1,14 @@
-import os, sys
-from sqlalchemy import create_engine, Column, Integer, String, DateTime
-from sqlalchemy.ext.declarative import declarative_base
-from dotenv import load_dotenv
+import sys
 from models.note import Note
 from models.notice import Notice
+from .database_session import DatabaseSession
 
 sys.path.append('../')
-load_dotenv()
-
-DATABASE_URL = "mysql+mysqlconnector://" + os.getenv('MYSQL_USER') + ":" + os.getenv('MYSQL_PASSWORD') + "@mysql/" + os.getenv('MYSQL_DATABASE')
-engine = create_engine(DATABASE_URL)
-Base = declarative_base()
 
 
 class Database():
+    engine = DatabaseSession().get_engine()
+
     def create_tables(self):
-        Note.metadata.create_all(engine)
-        Notice.metadata.create_all(engine)
+        Note.metadata.create_all(self.engine)
+        Notice.metadata.create_all(self.engine)
