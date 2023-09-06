@@ -1,10 +1,12 @@
 import sys
+from fastapi import Request
 from constants import TYPE_NOTICE
 from models.note import Note
 from models.notice import Notice
 from services.note_message_parser_service import NoteMessageParserService
 from response.error_response import ErrorResponse
 from response.success_response import SuccessResponse
+from database.database_session import DatabaseSession
 
 sys.path.append('../')
 
@@ -20,6 +22,24 @@ class NewNoteController:
             return SuccessResponse(NewNoteController().save(entity))
         except Exception as e:
             return ErrorResponse(str(e)).get()
+
+    def get_notes_action(self, request: Request):
+        params = dict(request.query_params)
+        page_size = params['pageSize']
+        offset = (int(params['page']) - 1) * int(page_size)
+
+        items = DatabaseSession().get_session().query(Note).offset(offset).limit(page_size).all()
+
+        return SuccessResponse(items)
+
+    def get_notices_action(self, request: Request):
+        params = dict(request.query_params)
+        page_size = params['pageSize']
+        offset = (int(params['page']) - 1) * int(page_size)
+
+        items = DatabaseSession().get_session().query(Notice).offset(offset).limit(page_size).all()
+
+        return SuccessResponse(items)
 
     def save(self, entity: dict):
         item_type = entity['item_type']
