@@ -24,12 +24,12 @@ class NoteMessageParser():
         if not text:
             return {'error': ERROR_EMPTY_MESSAGE}
 
-        notice_datetime = None
+        entity = {'text': text, 'item_type': item_type}
 
         if item_type == TYPE_NOTICE:
-            notice_datetime = self.get_notice_datetime(item['message'])
+            entity['datetime'] = self.get_notice_datetime(item['message'])
 
-        return {'text': text, 'item_type': item_type, 'notice_datetime': notice_datetime}
+        return entity
 
     def get_item_type(self, text: str) -> str:
         if re.compile("^\d{1,2}.\d{2}.\d{4}\s\d{2}:\d{2}").search(text):

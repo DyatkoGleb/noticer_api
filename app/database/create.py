@@ -12,14 +12,14 @@ engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 
 
-class Notices(Base):
+class Notice(Base):
     __tablename__ = "notices"
 
     id = Column(Integer, primary_key=True, index=True)
     text = Column(String(255), index=True)
     datetime = Column(DateTime)
 
-class Notes(Base):
+class Note(Base):
     __tablename__ = "notes"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -30,7 +30,7 @@ class Database():
         Base.metadata.create_all(bind=engine)
         self.db = sessionmaker(autocommit=False, autoflush=False, bind=engine)()
 
-    def add_new_item(self, db_item: Notes | Notices) -> dict:
+    def add_new_item(self, db_item: Note | Notice) -> dict:
         self.db.add(db_item)
         self.db.commit()
         self.db.refresh(db_item)
@@ -38,5 +38,5 @@ class Database():
 
         return self.sqlalchemy_object_to_dict(db_item)
 
-    def sqlalchemy_object_to_dict(self, object: Notes | Notices) -> dict:
+    def sqlalchemy_object_to_dict(self, object: Note | Notice) -> dict:
         return {column.name: getattr(object, column.name) for column in object.__table__.columns}
