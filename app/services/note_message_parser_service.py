@@ -10,7 +10,7 @@ OFFSET_STRING_NOTICE_DATE_LENGTH = STRING_NOTICE_DATE_LENGTH + 1
 ERROR_EMPTY_MESSAGE = 'Empty message'
 
 
-class NoteMessageParser():
+class NoteMessageParserService():
     def __init__(self):
         pass
 
