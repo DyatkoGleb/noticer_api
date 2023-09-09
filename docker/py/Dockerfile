@@ -6,7 +6,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 COPY requirements.txt .
-COPY . .
+COPY ../.. .
 
 RUN pip install python-dotenv
 RUN pip install --no-cache-dir -r requirements.txt

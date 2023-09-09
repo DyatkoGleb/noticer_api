@@ -3,8 +3,7 @@ services:
   py:
     container_name: py
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./docker/py
     ports:
       - "8008:8000"
     volumes:
@@ -13,7 +12,8 @@ services:
       - mysql
 
   mysql:
-    image: mysql:8.1
+    build:
+       context: ./docker/mysql
     container_name: mysql
     environment:
       MYSQL_DATABASE: '${MYSQL_DATABASE}'
