@@ -10,8 +10,11 @@ from database.database_session import DatabaseSession
 
 sys.path.append('../')
 
+FIRST_PAGE_NUMBER = 1
+PAGE_SIZE = 20
 
-class NewNoteController:
+
+class NoteController:
     def save_note_action(self, note: dict) -> SuccessResponse | ErrorResponse:
         entity = NoteMessageParserService().get_entity(note)
 
@@ -19,14 +22,15 @@ class NewNoteController:
             return ErrorResponse(entity['error']).get()
 
         try:
-            return SuccessResponse(NewNoteController().save(entity))
+            return SuccessResponse(NoteController().save(entity))
         except Exception as e:
             return ErrorResponse(str(e)).get()
 
     def get_notes_action(self, request: Request):
         params = dict(request.query_params)
-        page_size = params['pageSize']
-        offset = (int(params['page']) - 1) * int(page_size)
+        page_size = abs(int(params.get('pageSize', PAGE_SIZE)))
+        page = abs(int(params.get('page', FIRST_PAGE_NUMBER)))
+        offset = (int(page) - 1) * int(page_size)
 
         items = DatabaseSession().get_session().query(Note).offset(offset).limit(page_size).all()
 
@@ -34,8 +38,9 @@ class NewNoteController:
 
     def get_notices_action(self, request: Request):
         params = dict(request.query_params)
-        page_size = params['pageSize']
-        offset = (int(params['page']) - 1) * int(page_size)
+        page_size = abs(int(params.get('pageSize', PAGE_SIZE)))
+        page = abs(int(params.get('page', FIRST_PAGE_NUMBER)))
+        offset = (int(page) - 1) * int(page_size)
 
         items = DatabaseSession().get_session().query(Notice).offset(offset).limit(page_size).all()
 
