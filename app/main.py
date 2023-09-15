@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from router import router
-from database.database import Database
+from database import Database
 
 app = FastAPI()
 origins = ["*"]

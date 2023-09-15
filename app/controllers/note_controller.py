@@ -1,12 +1,10 @@
 import sys
 from fastapi import Request
 from constants import TYPE_NOTICE
-from models.note import Note
-from models.notice import Notice
-from services.note_message_parser_service import NoteMessageParserService
-from response.error_response import ErrorResponse
-from response.success_response import SuccessResponse
-from database.database_session import DatabaseSession
+from models import Note, Notice
+from services import NoteMessageParserService
+from response import SuccessResponse, ErrorResponse
+from database import DatabaseSession
 from utils import utils
 
 sys.path.append('../')

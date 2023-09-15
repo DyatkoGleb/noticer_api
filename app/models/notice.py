@@ -1,12 +1,11 @@
 import sys
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from services.model_service import ModelService
-from database.database_session import DatabaseSession
+from services import ModelService
+from database import DatabaseSession
 
 sys.path.append('../')
 Base = declarative_base()
-db = DatabaseSession().get_session()
 
 
 class Notice(Base):
@@ -16,10 +15,15 @@ class Notice(Base):
     text = Column(String(255), index=True)
     datetime = Column(DateTime)
 
+    db = DatabaseSession().get_session()
+
     def save(self) -> dict:
-        db.add(self)
-        db.commit()
-        db.refresh(self)
-        db.close()
+        self.db.add(self)
+        self.db.commit()
+        self.db.refresh(self)
+        self.db.close()
 
         return ModelService().sqlalchemy_object_to_dict(self)
+
+    def create_table(self):
+        Notice.metadata.create_all(DatabaseSession().engine)

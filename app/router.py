@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from controllers.new_note_controller import NoteController
+from controllers import NoteController
 
 router = APIRouter()
 
