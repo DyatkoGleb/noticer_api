@@ -7,6 +7,7 @@ from services.note_message_parser_service import NoteMessageParserService
 from response.error_response import ErrorResponse
 from response.success_response import SuccessResponse
 from database.database_session import DatabaseSession
+from utils import utils
 
 sys.path.append('../')
 
@@ -43,6 +44,7 @@ class NoteController:
         offset = (int(page) - 1) * int(page_size)
 
         items = DatabaseSession().get_session().query(Notice).offset(offset).limit(page_size).all()
+        items = utils.date_formatter(items)
 
         return SuccessResponse(items)
 
