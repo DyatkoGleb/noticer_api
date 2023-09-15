@@ -12,6 +12,10 @@ def add_new_note(note: dict):
 def get_notes(request: Request):
     return NoteController().get_notes_action(request)
 
-@router.get("/getNotices")
+@router.get("/getAllNotices")
 def get_notices(request: Request):
-    return NoteController().get_notices_action(request)
+    return NoteController().get_all_notices_action(request)
+
+@router.get("/getCurrentNotices")
+def get_notices(request: Request):
+    return NoteController().get_current_notices_action(request)

@@ -5,6 +5,7 @@ from models import Note, Notice
 from services import NoteMessageParserService
 from response import SuccessResponse, ErrorResponse
 from database import DatabaseSession
+from datetime import datetime
 from utils import utils
 
 sys.path.append('../')
@@ -35,16 +36,27 @@ class NoteController:
 
         return SuccessResponse(items)
 
-    def get_notices_action(self, request: Request):
+    def get_all_notices_action(self, request: Request) -> SuccessResponse:
+        return SuccessResponse(self.get_noices(request))
+
+    def get_current_notices_action(self, request: Request) -> SuccessResponse:
+        return SuccessResponse(self.get_noices(request, Notice.datetime > datetime.utcnow()))
+
+    def get_noices(self, request: Request, filter = True) -> dict:
         params = dict(request.query_params)
         page_size = abs(int(params.get('pageSize', PAGE_SIZE)))
         page = abs(int(params.get('page', FIRST_PAGE_NUMBER)))
         offset = (int(page) - 1) * int(page_size)
 
-        items = DatabaseSession().get_session().query(Notice).offset(offset).limit(page_size).all()
+        items = (DatabaseSession().get_session().query(Notice)
+                 .filter(filter)
+                 .offset(offset)
+                 .limit(page_size)
+                 .all()
+                 )
         items = utils.date_formatter(items)
 
-        return SuccessResponse(items)
+        return items
 
     def save(self, entity: dict):
         item_type = entity['item_type']
