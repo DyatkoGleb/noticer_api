@@ -48,4 +48,10 @@ class NoteMessageParserService():
     def get_notice_datetime(self, message: str) -> datetime:
         date_string = message[:STRING_NOTICE_DATE_LENGTH]
 
-        return datetime.strptime(date_string, "%d.%m.%Y %H:%M")
+        notice_datetime = datetime.strptime(date_string, "%d.%m.%Y %H:%M")
+        now = datetime.now()
+
+        if notice_datetime < now:
+            raise Exception()
+
+        return notice_datetime
