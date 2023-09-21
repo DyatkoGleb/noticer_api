@@ -16,6 +16,9 @@ class Note(Base):
 
     db = DatabaseSession().get_session()
 
+    def create_table(self):
+        Note.metadata.create_all(DatabaseSession().engine)
+
     def save(self) -> dict:
         self.db.add(self)
         self.db.commit()
@@ -24,5 +27,9 @@ class Note(Base):
 
         return ModelService().sqlalchemy_object_to_dict(self)
 
-    def create_table(self):
-        Note.metadata.create_all(DatabaseSession().engine)
+    def delete(self, note) -> dict:
+        note = self.db.query(Note).filter(Note.id == note['noteId']).first()
+        self.db.delete(note)
+        self.db.commit()
+
+        return note

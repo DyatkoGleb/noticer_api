@@ -26,6 +26,13 @@ class NoteController:
         except Exception as e:
             return ErrorResponse(str(e)).get()
 
+    def delete_notes_action(self, note: dict) -> SuccessResponse | ErrorResponse:
+        print(note['noteId'])
+        try:
+            return SuccessResponse(Note().delete(note))
+        except Exception as e:
+            return ErrorResponse(str(e)).get()
+
     def get_notes_action(self, request: Request):
         params = dict(request.query_params)
         page_size = abs(int(params.get('pageSize', PAGE_SIZE)))

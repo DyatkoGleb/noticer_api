@@ -8,6 +8,10 @@ router = APIRouter()
 def add_new_note(note: dict):
     return NoteController().save_note_action(note)
 
+@router.post("/deleteNote")
+def get_notes(note: dict):
+    return NoteController().delete_notes_action(note)
+
 @router.get("/getNotes")
 def get_notes(request: Request):
     return NoteController().get_notes_action(request)
