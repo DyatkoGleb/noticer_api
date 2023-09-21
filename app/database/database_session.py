@@ -13,7 +13,7 @@ class DatabaseSession:
     def __new__(self):
         if self._instance is None:
             self._instance = super(DatabaseSession, self).__new__(self)
-            self._instance.engine = create_engine(self.database_url)
+            self._instance.engine = create_engine(self.database_url, pool_size=20)
             self._instance.Session = sessionmaker(bind=self._instance.engine)
         return self._instance
 

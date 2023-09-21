@@ -2,6 +2,7 @@ version: '3'
 services:
   py:
     container_name: py
+    restart: always
     build:
       context: ./docker/py
     ports:
@@ -12,9 +13,10 @@ services:
       - mysql
 
   mysql:
+    container_name: mysql
+    restart: always
     build:
        context: ./docker/mysql
-    container_name: mysql
     environment:
       MYSQL_DATABASE: '${MYSQL_DATABASE}'
       MYSQL_USER: '${MYSQL_USER}'
