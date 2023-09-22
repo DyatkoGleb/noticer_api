@@ -27,7 +27,7 @@ class Note(Base):
 
         return ModelService().sqlalchemy_object_to_dict(self)
 
-    def delete(self, note) -> dict:
+    def delete(self, note: dict) -> dict:
         note = self.db.query(Note).filter(Note.id == note['noteId']).first()
         self.db.delete(note)
         self.db.commit()

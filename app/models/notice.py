@@ -17,6 +17,9 @@ class Notice(Base):
 
     db = DatabaseSession().get_session()
 
+    def create_table(self):
+        Notice.metadata.create_all(DatabaseSession().engine)
+
     def save(self) -> dict:
         self.db.add(self)
         self.db.commit()
@@ -25,5 +28,9 @@ class Notice(Base):
 
         return ModelService().sqlalchemy_object_to_dict(self)
 
-    def create_table(self):
-        Notice.metadata.create_all(DatabaseSession().engine)
+    def delete(self, notice: dict):
+        notice = self.db.query(Notice).filter(Notice.id == notice['noticeId']).first()
+        self.db.delete(notice)
+        self.db.commit()
+
+        return notice
