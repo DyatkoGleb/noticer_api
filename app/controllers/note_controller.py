@@ -5,6 +5,7 @@ from models import Note, Notice
 from services import NoteMessageParserService
 from response import SuccessResponse, ErrorResponse
 from database import DatabaseSession
+from services import ModelService
 from datetime import datetime
 from utils import utils
 
@@ -60,13 +61,17 @@ class NoteController:
         page = abs(int(params.get('page', FIRST_PAGE_NUMBER)))
         offset = (int(page) - 1) * int(page_size)
 
-        items = (DatabaseSession().get_session().query(Notice)
-                 .filter(filter)
-                 .offset(offset)
-                 .limit(page_size)
-                 .all()
-                 )
-        items = utils.date_formatter(items)
+        notices = (DatabaseSession().get_session().query(Notice)
+            .filter(filter)
+            .offset(offset)
+            .limit(page_size)
+            .all()
+        )
+
+        for i in range(len(notices)):
+            notices[i] = ModelService().sqlalchemy_object_to_dict(notices[i])
+
+        items = utils.date_formatter(notices)
 
         return items
 
@@ -77,6 +82,7 @@ class NoteController:
 
         if item_type == TYPE_NOTICE:
             entity = Notice(**entity).save()
+            entity = utils.date_formatter([entity])[0]
         else:
             entity = Note(**entity).save()
 
