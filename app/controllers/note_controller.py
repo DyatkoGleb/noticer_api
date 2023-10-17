@@ -70,9 +70,16 @@ class NoteController:
 
         return items
 
-    def save(self, entity: dict):
+    def save(self, entity: dict) -> dict:
         item_type = entity['item_type']
 
         del entity['item_type']
 
-        return Notice(**entity).save() if item_type == TYPE_NOTICE else Note(**entity).save()
+        if item_type == TYPE_NOTICE:
+            entity = Notice(**entity).save()
+        else:
+            entity = Note(**entity).save()
+
+        entity['item_type'] = item_type
+
+        return entity
