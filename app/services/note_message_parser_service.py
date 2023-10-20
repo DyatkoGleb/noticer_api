@@ -4,54 +4,59 @@ from constants import TYPE_NOTICE
 
 sys.path.append('../')
 
-STRING_NOTICE_DATE_LENGTH = 16
-OFFSET_STRING_NOTICE_DATE_LENGTH = STRING_NOTICE_DATE_LENGTH + 1
-ERROR_EMPTY_MESSAGE = 'Empty message'
-ERROR_INVALID_DATETIME = 'Invalid datetime'
-
 
 class NoteMessageParserService():
-    def get_entity(self, item: dict) -> dict:
+    STRING_NOTICE_DATE_LENGTH = 16
+    OFFSET_STRING_NOTICE_DATE_LENGTH = STRING_NOTICE_DATE_LENGTH + 1
+    ERROR_EMPTY_MESSAGE = 'Empty message'
+    ERROR_INVALID_DATETIME = 'Invalid datetime'
+
+    def get_note_entity(self, item: dict) -> dict:
         if not item['message']:
-            return {'error': ERROR_EMPTY_MESSAGE}
+            raise Exception(self.ERROR_EMPTY_MESSAGE)
 
-        item_type = self.get_item_type(item['message'])
-        text = self.get_text(item['message'], item_type)
+        entity = {'item_type': self.get_item_type(item)}
 
-        if not text:
-            return {'error': ERROR_EMPTY_MESSAGE}
+        if entity['item_type'] == TYPE_NOTICE:
+            entity['datetime'] = self.get_datetime(item)
 
-        entity = {'text': text, 'item_type': item_type}
-
-        if item_type == TYPE_NOTICE:
-            try:
-                entity['datetime'] = self.get_notice_datetime(item['message'])
-            except:
-                return {'error': ERROR_INVALID_DATETIME}
+        entity['text'] = self.get_text(item['message'], entity)
 
         return entity
 
-    def get_item_type(self, text: str) -> str:
-        if re.compile("^\d{1,2}.\d{2}.\d{4}\s\d{2}:\d{2}").search(text):
+    def get_item_type(self, item: dict) -> str:
+        if 'itemType' in item:
+            return item['itemType']
+
+        if re.compile("^\d{1,2}.\d{2}.\d{4}\s\d{2}:\d{2}").search(item['message']):
             return 'notice'
 
         return 'note'
 
-    def get_text(self, message: str, type: str) -> str:
+    def get_datetime(self, item: dict) -> datetime:
+        if 'datetime' in item:
+            return datetime.strptime(item['datetime'], "%d.%m.%Y %H:%M")
+
+        return self.get_notice_datetime(item['message'])
+
+    def get_text(self, message: str, entity: dict) -> str:
         text = message.strip()
 
-        if type == 'notice':
-            text = message[OFFSET_STRING_NOTICE_DATE_LENGTH:].strip()
+        if entity['item_type'] == 'notice' and not 'datetime' in entity:
+            text = message[self.OFFSET_STRING_NOTICE_DATE_LENGTH:].strip()
+
+        if not text:
+            raise Exception(self.ERROR_EMPTY_MESSAGE)
 
         return text
 
     def get_notice_datetime(self, message: str) -> datetime:
-        date_string = message[:STRING_NOTICE_DATE_LENGTH]
+        date_string = message[:self.STRING_NOTICE_DATE_LENGTH]
 
         notice_datetime = datetime.strptime(date_string, "%d.%m.%Y %H:%M")
         now = datetime.now()
 
         if notice_datetime < now:
-            raise Exception()
+            raise Exception(self.ERROR_INVALID_DATETIME)
 
         return notice_datetime

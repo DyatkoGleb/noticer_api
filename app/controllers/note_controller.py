@@ -17,12 +17,9 @@ PAGE_SIZE = 20
 
 class NoteController:
     def save_note_action(self, note: dict) -> SuccessResponse | ErrorResponse:
-        entity = NoteMessageParserService().get_entity(note)
-
-        if 'error' in entity:
-            return ErrorResponse(entity['error']).get()
-
         try:
+            entity = NoteMessageParserService().get_note_entity(note)
+
             return SuccessResponse(NoteController().save(entity))
         except Exception as e:
             return ErrorResponse(str(e)).get()
