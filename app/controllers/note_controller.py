@@ -47,12 +47,12 @@ class NoteController:
         return SuccessResponse(items)
 
     def get_all_notices_action(self, request: Request) -> SuccessResponse:
-        return SuccessResponse(self.get_noices(request))
+        return SuccessResponse(self.get_notices(request))
 
     def get_current_notices_action(self, request: Request) -> SuccessResponse:
-        return SuccessResponse(self.get_noices(request, Notice.datetime > datetime.utcnow()))
+        return SuccessResponse(self.get_notices(request, Notice.datetime > datetime.utcnow()))
 
-    def get_noices(self, request: Request, filter = True) -> dict:
+    def get_notices(self, request: Request, filter = True) -> dict:
         params = dict(request.query_params)
         page_size = abs(int(params.get('pageSize', PAGE_SIZE)))
         page = abs(int(params.get('page', FIRST_PAGE_NUMBER)))
@@ -70,9 +70,11 @@ class NoteController:
             notices[i] = ModelService().sqlalchemy_object_to_dict(notices[i])
             notices[i]['status'] = 'past' if now > notices[i]['datetime'] else 'future'
 
-        items = utils.date_formatter(notices)
+        notices = sorted(notices, key=lambda x: x['datetime'])
 
-        return items
+        notices = utils.date_formatter(notices)
+
+        return notices
 
     def save(self, entity: dict) -> dict:
         item_type = entity['item_type']
