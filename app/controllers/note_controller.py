@@ -57,6 +57,7 @@ class NoteController:
         page_size = abs(int(params.get('pageSize', PAGE_SIZE)))
         page = abs(int(params.get('page', FIRST_PAGE_NUMBER)))
         offset = (int(page) - 1) * int(page_size)
+        now = datetime.now()
 
         notices = (DatabaseSession().get_session().query(Notice)
             .filter(filter)
@@ -67,6 +68,7 @@ class NoteController:
 
         for i in range(len(notices)):
             notices[i] = ModelService().sqlalchemy_object_to_dict(notices[i])
+            notices[i]['status'] = 'past' if now > notices[i]['datetime'] else 'future'
 
         items = utils.date_formatter(notices)
 
