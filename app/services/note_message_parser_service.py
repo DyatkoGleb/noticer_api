@@ -20,7 +20,7 @@ class NoteMessageParserService():
         if entity['item_type'] == TYPE_NOTICE:
             entity['datetime'] = self.get_datetime(item)
 
-        entity['text'] = self.get_text(item['message'], entity)
+        entity['text'] = self.get_text(item, entity)
 
         return entity
 
@@ -39,11 +39,11 @@ class NoteMessageParserService():
 
         return self.get_notice_datetime(item['message'])
 
-    def get_text(self, message: str, entity: dict) -> str:
-        text = message.strip()
+    def get_text(self, item: dict, entity: dict) -> str:
+        text = item['message'].strip()
 
-        if entity['item_type'] == 'notice' and not 'datetime' in entity:
-            text = message[self.OFFSET_STRING_NOTICE_DATE_LENGTH:].strip()
+        if entity['item_type'] == 'notice' and not 'datetime' in item:
+            text = text[self.OFFSET_STRING_NOTICE_DATE_LENGTH:].strip()
 
         if not text:
             raise Exception(self.ERROR_EMPTY_MESSAGE)
