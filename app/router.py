@@ -12,13 +12,13 @@ def add_new_note(note: dict):
 def get_notes(note: dict):
     return NoteController().delete_note_action(note)
 
-@router.post("/deleteNotice")
-def get_notes(note: dict):
-    return NoteController().delete_notice_action(note)
-
 @router.get("/getNotes")
 def get_notes(request: Request):
     return NoteController().get_notes_action(request)
+
+@router.get("/getTodos")
+def get_notes(request: Request):
+    return NoteController().get_todos_action(request)
 
 @router.get("/getAllNotices")
 def get_notices(request: Request):
@@ -27,3 +27,7 @@ def get_notices(request: Request):
 @router.get("/getCurrentNotices")
 def get_notices(request: Request):
     return NoteController().get_current_notices_action(request)
+
+@router.post("/deleteNotice")
+def get_notes(note: dict):
+    return NoteController().delete_notice_action(note)

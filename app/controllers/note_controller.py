@@ -46,6 +46,16 @@ class NoteController:
 
         return SuccessResponse(items)
 
+    def get_todos_action(self, request: Request):
+        params = dict(request.query_params)
+        page_size = abs(int(params.get('pageSize', PAGE_SIZE)))
+        page = abs(int(params.get('page', FIRST_PAGE_NUMBER)))
+        offset = (int(page) - 1) * int(page_size)
+
+        items = DatabaseSession().get_session().query(Todo).offset(offset).limit(page_size).all()
+
+        return SuccessResponse(items)
+
     def get_all_notices_action(self, request: Request) -> SuccessResponse:
         return SuccessResponse(self.get_notices(request))
 
