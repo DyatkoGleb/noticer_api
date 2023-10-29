@@ -13,7 +13,7 @@ class Todo(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     text = Column(String(255), index=True)
-    is_completed = Column(Boolean)
+    is_completed = Column(Boolean, default=False)
 
     db = DatabaseSession().get_session()
 
