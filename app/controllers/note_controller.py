@@ -1,7 +1,7 @@
 import sys
 from fastapi import Request
-from constants import TYPE_NOTICE
-from models import Note, Notice
+from constants import TYPE_NOTICE, TYPE_NOTE
+from models import Note, Todo, Notice
 from services import NoteMessageParserService
 from response import SuccessResponse, ErrorResponse
 from database import DatabaseSession
@@ -84,8 +84,10 @@ class NoteController:
         if item_type == TYPE_NOTICE:
             entity = Notice(**entity).save()
             entity = utils.date_formatter([entity])[0]
-        else:
+        elif item_type == TYPE_NOTE:
             entity = Note(**entity).save()
+        else:
+            entity = Todo(**entity).save()
 
         entity['item_type'] = item_type
 

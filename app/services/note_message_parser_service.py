@@ -28,6 +28,9 @@ class NoteMessageParserService():
         if 'itemType' in item:
             return item['itemType']
 
+        if re.compile("^(todo )").search(item['message']):
+            return 'todo'
+
         if re.compile("^\d{1,2}.\d{2}.\d{4}\s\d{2}:\d{2}").search(item['message']):
             return 'notice'
 
