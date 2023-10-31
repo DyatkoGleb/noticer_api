@@ -19,6 +19,9 @@ def get_notes(request: Request):
 @router.get("/getTodos")
 def get_notes(request: Request):
     return NoteController().get_todos_action(request)
+@router.post("/deleteTodo")
+async def get_notes(request: Request):
+    return NoteController().delete_todo_action(await request.json())
 
 @router.get("/getAllNotices")
 def get_notices(request: Request):

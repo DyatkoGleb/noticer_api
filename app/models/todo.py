@@ -29,7 +29,7 @@ class Todo(Base):
         return ModelService().sqlalchemy_object_to_dict(self)
 
     def delete(self, todo: dict) -> dict:
-        todo = self.db.query(Todo).filter(Todo.id == todo['todoId']).first()
+        todo = self.db.query(Todo).filter(Todo.id == todo['id']).first()
         self.db.delete(todo)
         self.db.commit()
 

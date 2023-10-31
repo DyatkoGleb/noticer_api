@@ -56,6 +56,12 @@ class NoteController:
 
         return SuccessResponse(items)
 
+    def delete_todo_action(self, todo: dict) -> SuccessResponse | ErrorResponse:
+        try:
+            return SuccessResponse(Todo().delete(todo))
+        except Exception as e:
+            return ErrorResponse(str(e)).get()
+
     def get_all_notices_action(self, request: Request) -> SuccessResponse:
         return SuccessResponse(self.get_notices(request))
 
