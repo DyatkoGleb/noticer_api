@@ -24,9 +24,9 @@ class NoteController:
         except Exception as e:
             return ErrorResponse(str(e)).get()
 
-    def delete_note_action(self, note: dict) -> SuccessResponse | ErrorResponse:
+    def delete_note_action(self, entity: Note | Todo | Notice, note: dict) -> SuccessResponse | ErrorResponse:
         try:
-            return SuccessResponse(Note().delete(note))
+            return SuccessResponse(entity().delete(note))
         except Exception as e:
             return ErrorResponse(str(e)).get()
 
@@ -49,12 +49,6 @@ class NoteController:
         items = DatabaseSession().get_session().query(Todo).offset(offset).limit(page_size).all()
 
         return SuccessResponse(items)
-
-    def delete_todo_action(self, todo: dict) -> SuccessResponse | ErrorResponse:
-        try:
-            return SuccessResponse(Todo().delete(todo))
-        except Exception as e:
-            return ErrorResponse(str(e)).get()
 
     def get_all_notices_action(self, request: Request) -> SuccessResponse:
         return SuccessResponse(self.get_notices(request))
@@ -85,12 +79,6 @@ class NoteController:
         notices = utils.date_formatter(notices)
 
         return notices
-
-    def delete_notice_action(self, note: dict) -> SuccessResponse | ErrorResponse:
-        try:
-            return SuccessResponse(Notice().delete(note))
-        except Exception as e:
-            return ErrorResponse(str(e)).get()
 
     def save(self, entity: dict) -> dict:
         item_type = entity['item_type']

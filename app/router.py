@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 from controllers import NoteController
+from models import Note, Todo, Notice
 
 router = APIRouter()
 
@@ -13,24 +14,25 @@ def get_notes(request: Request):
     return NoteController().get_notes_action(request)
 
 @router.post("/deleteNote")
-async def get_notes(request: Request):
-    return NoteController().delete_note_action(await request.json())
+async def delete_note(note: dict):
+    return NoteController().delete_note_action(Note, note)
 
 @router.get("/getTodos")
-def get_notes(request: Request):
+def get_todos(request: Request):
     return NoteController().get_todos_action(request)
+
 @router.post("/deleteTodo")
-async def get_notes(request: Request):
-    return NoteController().delete_todo_action(await request.json())
+async def delete_todo(todo: dict):
+    return NoteController().delete_note_action(Todo, todo)
 
 @router.get("/getAllNotices")
-def get_notices(request: Request):
+def get_all_notices(request: Request):
     return NoteController().get_all_notices_action(request)
 
 @router.get("/getCurrentNotices")
-def get_notices(request: Request):
+def get_current_notices(request: Request):
     return NoteController().get_current_notices_action(request)
 
 @router.post("/deleteNotice")
-async def get_notes(request: Request):
-    return NoteController().delete_notice_action(await request.json())
+def delete_notice(notice: dict):
+    return NoteController().delete_note_action(Notice, notice)
