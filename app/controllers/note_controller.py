@@ -30,12 +30,6 @@ class NoteController:
         except Exception as e:
             return ErrorResponse(str(e)).get()
 
-    def delete_notice_action(self, note: dict) -> SuccessResponse | ErrorResponse:
-        try:
-            return SuccessResponse(Notice().delete(note))
-        except Exception as e:
-            return ErrorResponse(str(e)).get()
-
     def get_notes_action(self, request: Request):
         params = dict(request.query_params)
         page_size = abs(int(params.get('pageSize', PAGE_SIZE)))
@@ -91,6 +85,12 @@ class NoteController:
         notices = utils.date_formatter(notices)
 
         return notices
+
+    def delete_notice_action(self, note: dict) -> SuccessResponse | ErrorResponse:
+        try:
+            return SuccessResponse(Notice().delete(note))
+        except Exception as e:
+            return ErrorResponse(str(e)).get()
 
     def save(self, entity: dict) -> dict:
         item_type = entity['item_type']

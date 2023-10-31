@@ -29,7 +29,7 @@ class Notice(Base):
         return ModelService().sqlalchemy_object_to_dict(self)
 
     def delete(self, notice: dict):
-        notice = self.db.query(Notice).filter(Notice.id == notice['noticeId']).first()
+        notice = self.db.query(Notice).filter(Notice.id == notice['id']).first()
         self.db.delete(notice)
         self.db.commit()
 
