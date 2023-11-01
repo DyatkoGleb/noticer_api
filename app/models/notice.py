@@ -15,6 +15,8 @@ class Notice(Base):
     text = Column(String(255), index=True)
     datetime = Column(DateTime)
 
+    ERROR_NOTICE_NOT_FOUND = 'Notice not found'
+
     db = DatabaseSession().get_session()
 
     def create_table(self):
@@ -34,3 +36,15 @@ class Notice(Base):
         self.db.commit()
 
         return notice
+
+    def update(self, updatedNotice: dict) -> dict:
+        notice = self.db.query(Notice).filter(Notice.id == updatedNotice['id']).first()
+
+        if notice:
+            for key, value in updatedNotice.items():
+                setattr(notice, key, value)
+            self.db.commit()
+
+            return ModelService().sqlalchemy_object_to_dict(notice)
+        else:
+            raise Exception(self.ERROR_NOTICE_NOT_FOUND)

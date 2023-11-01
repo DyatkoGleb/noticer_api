@@ -24,6 +24,12 @@ class NoteController:
         except Exception as e:
             return ErrorResponse(str(e)).get()
 
+    def save_updated_note_action(self, note: dict) -> SuccessResponse | ErrorResponse:
+        try:
+            return SuccessResponse(NoteController().update(note))
+        except Exception as e:
+            return ErrorResponse(str(e)).get()
+
     def delete_note_action(self, entity: Note | Todo | Notice, note: dict) -> SuccessResponse | ErrorResponse:
         try:
             return SuccessResponse(entity().delete(note))
@@ -94,5 +100,23 @@ class NoteController:
             entity = Todo(**entity).save()
 
         entity['item_type'] = item_type
+
+        return entity
+
+    def update(self, entity: dict) -> dict:
+        item_type = entity['itemType']
+
+        del entity['itemType']
+
+        if item_type == TYPE_NOTICE:
+            notice_datetime = entity['datetime']
+            notice_datetime = datetime.strptime(notice_datetime, "%d.%m.%Y %H:%M")
+            entity['datetime'] = notice_datetime
+            entity = Notice().update(entity)
+            entity = utils.date_formatter([entity])[0]
+        elif item_type == TYPE_NOTE:
+            entity = Note().update(entity)
+        else:
+            entity = Todo().update(entity)
 
         return entity

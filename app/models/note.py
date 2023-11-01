@@ -14,6 +14,8 @@ class Note(Base):
     id = Column(Integer, primary_key=True, index=True)
     text = Column(String(255), index=True)
 
+    ERROR_NOTE_NOT_FOUND = 'Note not found'
+
     db = DatabaseSession().get_session()
 
     def create_table(self):
@@ -33,3 +35,15 @@ class Note(Base):
         self.db.commit()
 
         return note
+
+    def update(self, updatedNote: dict) -> dict:
+        note = self.db.query(Note).filter(Note.id == updatedNote['id']).first()
+
+        if note:
+            for key, value in updatedNote.items():
+                setattr(note, key, value)
+            self.db.commit()
+
+            return ModelService().sqlalchemy_object_to_dict(note)
+        else:
+            raise Exception(self.ERROR_NOTE_NOT_FOUND)

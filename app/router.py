@@ -13,6 +13,10 @@ def add_new_note(note: dict):
 def get_notes(request: Request):
     return NoteController().get_notes_action(request)
 
+@router.post("/editNote")
+def edit_note(note: dict):
+    return NoteController().save_updated_note_action(note)
+
 @router.post("/deleteNote")
 async def delete_note(note: dict):
     return NoteController().delete_note_action(Note, note)
