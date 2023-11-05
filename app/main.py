@@ -3,7 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from router import router
 from database import Database
 
-app = FastAPI()
+app = FastAPI(
+    title="Your API Title",
+    description="Your API Description",
+    version="1.0.0",
+    openapi_url="/api/v1/openapi.json",
+    docs_url="/api/v1/docs",
+)
 origins = ["*"]
 app.add_middleware(
     CORSMiddleware,
