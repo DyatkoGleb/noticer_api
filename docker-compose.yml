@@ -1,7 +1,7 @@
 version: '3'
 services:
   py:
-    container_name: py
+    container_name: na_py
     restart: always
     build:
       context: ./docker/py
@@ -15,7 +15,7 @@ services:
       - noticer
 
   mysql:
-    container_name: mysql
+    container_name: na_mysql
     restart: always
     build:
        context: ./docker/mysql
