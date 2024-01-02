@@ -25,7 +25,7 @@ class NoteMessageParserService():
         return entity
 
     def get_item_type(self, item: dict) -> str:
-        if 'itemType' in item:
+        if 'itemType' in item and item['itemType']:
             return item['itemType']
 
         if re.compile("^(todo )").search(item['message']):
@@ -38,9 +38,14 @@ class NoteMessageParserService():
 
     def get_datetime(self, item: dict) -> datetime:
         if 'datetime' in item:
-            return datetime.strptime(item['datetime'], "%d.%m.%Y %H:%M")
+            date_time = datetime.strptime(item['datetime'], "%d.%m.%Y %H:%M")
+        else:
+            date_time = self.get_notice_datetime(item['message'])
 
-        return self.get_notice_datetime(item['message'])
+        if date_time < datetime.now():
+            raise Exception(self.ERROR_INVALID_DATETIME)
+
+        return date_time
 
     def get_text(self, item: dict, entity: dict) -> str:
         text = item['message'].strip()
@@ -56,10 +61,4 @@ class NoteMessageParserService():
     def get_notice_datetime(self, message: str) -> datetime:
         date_string = message[:self.STRING_NOTICE_DATE_LENGTH]
 
-        notice_datetime = datetime.strptime(date_string, "%d.%m.%Y %H:%M")
-        now = datetime.now()
-
-        if notice_datetime < now:
-            raise Exception(self.ERROR_INVALID_DATETIME)
-
-        return notice_datetime
+        return datetime.strptime(date_string, "%d.%m.%Y %H:%M")
