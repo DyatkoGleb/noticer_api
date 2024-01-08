@@ -79,6 +79,7 @@ class NoteController:
         for i in range(len(notices)):
             notices[i] = ModelService().sqlalchemy_object_to_dict(notices[i])
             notices[i]['status'] = 'past' if now > notices[i]['datetime'] else 'future'
+            notices[i]['true_datetime'] = notices[i]['datetime']
 
         notices = sorted(notices, key=lambda x: x['datetime'])
 
