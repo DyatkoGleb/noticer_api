@@ -1,5 +1,5 @@
 import sys
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, Text
 from sqlalchemy.ext.declarative import declarative_base
 from services import ModelService
 from database import DatabaseSession
@@ -12,7 +12,7 @@ class Note(Base):
     __tablename__ = "notes"
 
     id = Column(Integer, primary_key=True, index=True)
-    text = Column(String(255), index=True)
+    text = Column(Text, index=True)
 
     ERROR_NOTE_NOT_FOUND = 'Note not found'
 
