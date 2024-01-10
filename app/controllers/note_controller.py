@@ -6,7 +6,7 @@ from services import NoteMessageParserService
 from response import SuccessResponse, ErrorResponse
 from database import DatabaseSession
 from services import ModelService
-from datetime import datetime
+from datetime import datetime, timedelta
 from utils import utils
 
 sys.path.append('../')
@@ -61,6 +61,12 @@ class NoteController:
 
     def get_current_notices_action(self, request: Request) -> SuccessResponse:
         return SuccessResponse(self.get_notices(request, Notice.datetime > datetime.utcnow()))
+
+    def get_notes_for_next_day(self, request: Request) -> SuccessResponse:
+        next_day = datetime.utcnow() + timedelta(days=1)
+        filter_condition = (Notice.datetime >= next_day) & (Notice.datetime < next_day + timedelta(days=1))
+
+        return SuccessResponse(self.get_notices(request, filter_condition))
 
     def get_notices(self, request: Request, filter = True) -> dict:
         params = dict(request.query_params)

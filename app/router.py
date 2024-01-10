@@ -40,3 +40,7 @@ def get_current_notices(request: Request):
 @router.post("/api/deleteNotice")
 def delete_notice(notice: dict):
     return NoteController().delete_note_action(Notice, notice)
+
+@router.get("/api/getNotesForNextDay")
+def get_current_notices(request: Request):
+    return NoteController().get_notes_for_next_day(request)
